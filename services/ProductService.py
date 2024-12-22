@@ -28,6 +28,19 @@ class ProductService:
         return Product(**product)
 
     @staticmethod
+    def get_product_by_name(product_name: str) -> Product:
+        """
+        Retrieve a product by its name.
+        :param product_name: The name of the product
+        :return: Product instance
+        """
+        product = ProductDAO.read_by_name(product_name)
+        if not product:
+            raise ValueError(f"Product with name {product_name} not found.")
+        return Product(**product)
+
+
+    @staticmethod
     def get_all_products() -> List[Product]:
         """
         Retrieve all products.
