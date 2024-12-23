@@ -42,15 +42,16 @@ class ProductDAO:
                 raise ValueError(f"Produit avec ID {product_id} non trouvé.")
         except Exception as e:
             raise RuntimeError(f"Erreur lors de la lecture du produit : {e}")
-        
-    def read_by_name(self, product_name):
+
+    @staticmethod    
+    def read_by_name(product_name):
         """
         Lit un produit par son nom.
         :param product_name: Nom du produit
         :return: Le produit correspondant
         """
         try:
-            response = self.supabase.table("products").select("*").eq("name", product_name).execute()
+            response = ProductDAO._supabase.table("products").select("*").eq("name", product_name).execute()
             if response.data:
                 return response.data[0]
             else:

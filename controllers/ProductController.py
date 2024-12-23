@@ -12,14 +12,14 @@ def create_product(product: Product):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.get("/product/{product_id}", response_model=Product)
+@router.get("/product/id/{product_id}", response_model=Product)
 def get_product(product_id: str):
     try:
         return ProductService.get_product_by_id(product_id)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
-@router.get("/product/{product_name}", response_model=Product)
+@router.get("/product/name/{product_name}", response_model=Product)
 def get_product_by_name(product_name: str):
     try:
         return ProductService.get_product_by_name(product_name)
