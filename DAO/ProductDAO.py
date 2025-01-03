@@ -1,5 +1,6 @@
 from db.supabase_connexion import SupabaseConnection
 
+
 class ProductDAO:
     _supabase = SupabaseConnection.create_connection()
 
@@ -19,7 +20,9 @@ class ProductDAO:
         :return: Le produit créé
         """
         try:
-            response = ProductDAO._supabase.table("products").insert(product_data).execute()
+            response = (
+                ProductDAO._supabase.table("products").insert(product_data).execute()
+            )
             if response.data:
                 return response.data[0]
             else:
@@ -35,7 +38,12 @@ class ProductDAO:
         :return: Le produit correspondant
         """
         try:
-            response = ProductDAO._supabase.table("products").select("*").eq("id", product_id).execute()
+            response = (
+                ProductDAO._supabase.table("products")
+                .select("*")
+                .eq("id", product_id)
+                .execute()
+            )
             if response.data:
                 return response.data[0]
             else:
@@ -43,7 +51,7 @@ class ProductDAO:
         except Exception as e:
             raise RuntimeError(f"Erreur lors de la lecture du produit : {e}")
 
-    @staticmethod    
+    @staticmethod
     def read_by_name(product_name):
         """
         Lit un produit par son nom.
@@ -51,13 +59,18 @@ class ProductDAO:
         :return: Le produit correspondant
         """
         try:
-            response = ProductDAO._supabase.table("products").select("*").eq("name", product_name).execute()
+            response = (
+                ProductDAO._supabase.table("products")
+                .select("*")
+                .eq("name", product_name)
+                .execute()
+            )
             if response.data:
                 return response.data[0]
             else:
                 raise ValueError(f"Produit avec le nom {product_name} non trouvé.")
         except Exception as e:
-            raise RuntimeError(f"Erreur lors de la lecture du produit par nom : {e}") 
+            raise RuntimeError(f"Erreur lors de la lecture du produit par nom : {e}")
 
     @staticmethod
     def read_all():
@@ -72,6 +85,22 @@ class ProductDAO:
             raise RuntimeError(f"Erreur lors de la récupération des produits : {e}")
 
     @staticmethod
+    def read_all_by_store_id(store_id):
+        try:
+            response = (
+                ProductDAO._supabase.table("products")
+                .select("*")
+                .eq("store_id", store_id)
+                .execute()
+            )
+            if response.data:
+                return response.data
+            else:
+                raise ValueError(f"Produits avec le store_id {store_id} non trouvé.")
+        except Exception as e:
+            raise RuntimeError(f"Erreur lors de la récupération des produits : {e}")
+
+    @staticmethod
     def update(product_id, updates):
         """
         Met à jour un produit existant.
@@ -80,7 +109,12 @@ class ProductDAO:
         :return: Le produit mis à jour
         """
         try:
-            response = ProductDAO._supabase.table("products").update(updates).eq("id", product_id).execute()
+            response = (
+                ProductDAO._supabase.table("products")
+                .update(updates)
+                .eq("id", product_id)
+                .execute()
+            )
             if response.data:
                 return response.data[0]
             else:
@@ -96,7 +130,12 @@ class ProductDAO:
         :return: Confirmation de la suppression
         """
         try:
-            response = ProductDAO._supabase.table("products").delete().eq("id", product_id).execute()
+            response = (
+                ProductDAO._supabase.table("products")
+                .delete()
+                .eq("id", product_id)
+                .execute()
+            )
             if response.data:
                 return response.data[0]
             else:

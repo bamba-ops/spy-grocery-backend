@@ -1,6 +1,9 @@
 from typing import List
 from DAO.PriceDAO import PriceDAO
 from models.price import Price
+from DAO.ProductDAO import ProductDAO
+from DAO.StoreDAO import StoreDAO
+
 
 class PriceService:
 
@@ -34,6 +37,23 @@ class PriceService:
         :return: List of Price instances
         """
         prices = PriceDAO.read_all()
+        return [Price(**price) for price in prices]
+
+    @staticmethod
+    def get_all_prices_by_store_id(store_id: str) -> List[Price]:
+        prices = PriceDAO.read_all_prices_by_store_id(store_id)
+        products = ProductDAO.read_all_by_store_id(store_id)
+        store = StoreDAO.read(store_id)
+
+        for price in prices:
+            for product in products:
+                if price["product_id"] == product["id"]:
+                    price["product"] = product
+
+        for price in prices:
+            if store["id"] == store_id:
+                price["store"] = store
+
         return [Price(**price) for price in prices]
 
     @staticmethod

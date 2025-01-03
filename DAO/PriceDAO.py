@@ -36,11 +36,37 @@ class PriceDAO:
         :return: Le prix correspondant
         """
         try:
-            response = PriceDAO._supabase.table("prices").select("*").eq("id", price_id).execute()
+            response = (
+                PriceDAO._supabase.table("prices")
+                .select("*")
+                .eq("id", price_id)
+                .execute()
+            )
             if response.data:
                 return response.data[0]
             else:
                 raise ValueError(f"Prix avec ID {price_id} non trouvé.")
+        except Exception as e:
+            raise RuntimeError(f"Erreur lors de la lecture du prix : {e}")
+
+    @staticmethod
+    def read_by_product_id(product_id):
+        """
+        Lit un prix par son product_id.
+        :param product_id: ID du product
+        :return: Le prix correspondant
+        """
+        try:
+            response = (
+                PriceDAO._supabase.table("prices")
+                .select("*")
+                .eq("product_id", product_id)
+                .execute()
+            )
+            if response.data:
+                return response.data[0]
+            else:
+                raise ValueError(f"Prix avec product_id {product_id} non trouvé.")
         except Exception as e:
             raise RuntimeError(f"Erreur lors de la lecture du prix : {e}")
 
@@ -57,6 +83,22 @@ class PriceDAO:
             raise RuntimeError(f"Erreur lors de la récupération des prix : {e}")
 
     @staticmethod
+    def read_all_prices_by_store_id(store_id):
+        try:
+            response = (
+                PriceDAO._supabase.table("prices")
+                .select("*")
+                .eq("store_id", store_id)
+                .execute()
+            )
+            if response.data:
+                return response.data
+            else:
+                raise ValueError(f"Prix avec product_id {store_id} non trouvé.")
+        except Exception as e:
+            raise RuntimeError(f"Erreur lors de la lecture du prix : {e}")
+
+    @staticmethod
     def read_by_product_and_store(product_id, store_id):
         """
         Lit un prix par ID de produit et ID de magasin.
@@ -65,11 +107,19 @@ class PriceDAO:
         :return: Le prix correspondant
         """
         try:
-            response = PriceDAO._supabase.table("prices").select("*").eq("product_id", product_id).eq("store_id", store_id).execute()
+            response = (
+                PriceDAO._supabase.table("prices")
+                .select("*")
+                .eq("product_id", product_id)
+                .eq("store_id", store_id)
+                .execute()
+            )
             if response.data:
                 return response.data[0]
             else:
-                raise ValueError(f"Prix pour le produit {product_id} dans le magasin {store_id} non trouvé.")
+                raise ValueError(
+                    f"Prix pour le produit {product_id} dans le magasin {store_id} non trouvé."
+                )
         except Exception as e:
             raise RuntimeError(f"Erreur lors de la lecture du prix : {e}")
 
@@ -82,7 +132,12 @@ class PriceDAO:
         :return: Le prix mis à jour
         """
         try:
-            response = PriceDAO._supabase.table("prices").update(updates).eq("id", price_id).execute()
+            response = (
+                PriceDAO._supabase.table("prices")
+                .update(updates)
+                .eq("id", price_id)
+                .execute()
+            )
             if response.data:
                 return response.data[0]
             else:
@@ -98,7 +153,9 @@ class PriceDAO:
         :return: Confirmation de la suppression
         """
         try:
-            response = PriceDAO._supabase.table("prices").delete().eq("id", price_id).execute()
+            response = (
+                PriceDAO._supabase.table("prices").delete().eq("id", price_id).execute()
+            )
             if response.data:
                 return response.data[0]
             else:
